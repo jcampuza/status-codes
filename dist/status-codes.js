@@ -354,7 +354,7 @@ function app(state, actions, view, container) {
     return element;
   }
 }
-},{}],9:[function(require,module,exports) {
+},{}],3:[function(require,module,exports) {
 module.exports = [
     {
         "code": "1xx",
@@ -807,12 +807,15 @@ var informationalCodes = _statusCodes2.default.filter(function (statusObject) {
 });
 var allStatuses = _statusCodes2.default.filter(function (statusObject) {
     return !statusObject.code.endsWith('xx');
+}).sort(function (a, b) {
+    return parseInt(a.code) - parseInt(b.code);
 });
 
 var state = {
     statuses: allStatuses,
     informational: informationalCodes,
-    currentStatus: null
+    currentStatus: null,
+    codeFilter: ''
 };
 
 var actions = {
@@ -824,7 +827,42 @@ var actions = {
                 currentStatus: state.statuses[randomIndex]
             };
         };
+    },
+
+    onFilterChanged: function onFilterChanged(e) {
+        return function (state) {
+            var value = e.target.value;
+            console.log(value);
+            if (!value) return { statuses: allStatuses, codeFilter: value };
+
+            var filteredStatuses = allStatuses.filter(function (statusObject) {
+                return statusObject.code.startsWith(value);
+            });
+            return { statuses: filteredStatuses, codeFilter: value };
+        };
     }
+};
+
+var renderStatusCodeItem = function renderStatusCodeItem(status) {
+    return (0, _hyperapp.h)(
+        'div',
+        null,
+        (0, _hyperapp.h)(
+            'p',
+            null,
+            status.code
+        ),
+        (0, _hyperapp.h)(
+            'p',
+            null,
+            status.phrase
+        ),
+        (0, _hyperapp.h)(
+            'p',
+            null,
+            status.description
+        )
+    );
 };
 
 var view = function view(state, actions) {
@@ -843,30 +881,15 @@ var view = function view(state, actions) {
                 } },
             'Get Another Status'
         ),
-        state.currentStatus && (0, _hyperapp.h)(
-            'div',
-            null,
-            (0, _hyperapp.h)(
-                'p',
-                null,
-                state.currentStatus.code
-            ),
-            (0, _hyperapp.h)(
-                'p',
-                null,
-                state.currentStatus.phrase
-            ),
-            (0, _hyperapp.h)(
-                'p',
-                null,
-                state.currentStatus.description
-            )
-        )
+        (0, _hyperapp.h)('input', { autofocus: true, type: 'text', value: state.codeFilter, oninput: function oninput(e) {
+                return actions.onFilterChanged(e);
+            } }),
+        state.statuses.map(renderStatusCodeItem)
     );
 };
 
 (0, _hyperapp.app)(state, actions, view, document.getElementById('root'));
-},{"hyperapp":4,"./statusCodes.json":9}],11:[function(require,module,exports) {
+},{"hyperapp":4,"./statusCodes.json":3}],11:[function(require,module,exports) {
 
 var global = (1, eval)('this');
 var OldModule = module.bundle.Module;
@@ -888,7 +911,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '60317' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '63274' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
