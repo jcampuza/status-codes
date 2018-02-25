@@ -2,9 +2,9 @@
 
 Status Codes is a project to help users memorize HTTP status codes, both common and uncommon. It will include a browse view which allows users to search for status codes, as well as some simple randomized shuffling of statuses in order to test your current knowledge.
 
-The goal is to get some experience using `Hyperapp` as well as some of it's official supporting libraries like `@Hyperapp/Router`. 
+The goal is to get some experience using [Hyperapp](https://github.com/hyperapp/hyperapp) as well as some of it's official supporting libraries like [@Hyperapp/Router](https://github.com/hyperapp/router). 
 
-The project uses `Parcel` for building as well as developing with hot reloading/updating.
+The project uses [Parcel](https://github.com/parcel-bundler/parcel) for building as well as developing with hot reloading/updating.
 
 
 ### Installation
