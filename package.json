@@ -4,14 +4,16 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "parcel index.html -p 3000"
+    "start": "parcel index.html -p 3000",
+    "build": "parcel build index.html"
   },
   "dependencies": {
+    "@hyperapp/router": "^0.4.1",
     "hyperapp": "^1.1.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-plugin-transform-react-jsx": "^6.24.1"
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.6.1"
   }
 }

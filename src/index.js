@@ -1,10 +1,13 @@
 import { h, app } from 'hyperapp';
+import { location, Link } from "@hyperapp/router";
 import statusCodes from './statusCodes.json';
+import Router from './router';
 
 const informationalCodes = statusCodes.filter(statusObject => statusObject.code.endsWith('xx'));
 const allStatuses = statusCodes.filter(statusObject => !statusObject.code.endsWith('xx')).sort((a, b) => (parseInt(a.code) - parseInt(b.code)));
 
 const state = {
+    location: location.state,
     statuses: allStatuses,
     informational: informationalCodes,
     currentStatus: null,
@@ -12,6 +15,7 @@ const state = {
 };
 
 const actions = {
+    location: location.actions,
     getNewCode: () => state => {
         const randomIndex = Math.floor(Math.random() * state.statuses.length);
 
@@ -30,22 +34,32 @@ const actions = {
     }
 };
 
-const renderStatusCodeItem = (status) => (
-    <div>
-        <p>{status.code}</p>
-        <p>{status.phrase}</p>
-        <p>{status.description}</p>
-    </div>
+const Navigation = (state) => (
+    <nav>
+        <ul>
+            <li>
+                <Link to="/">Home</Link>
+            </li>
+            <li>
+                <Link to="/browse">Browse</Link>
+            </li>
+            <li>
+                <Link to="/guess">Guess</Link>
+            </li>
+            <li>
+                <Link to="/about">About</Link>
+            </li>
+        </ul>
+    </nav>
 )
 
 const view = (state, actions) => (
     <div>
-        <h1>Random Status</h1>
-        <button onclick={() => actions.getNewCode()}>Get Another Status</button>
-        <input autofocus type="text" value={state.codeFilter} oninput={(e) => actions.onFilterChanged(e)}/>
-        
-        {state.statuses.map(renderStatusCodeItem)}
+        <Navigation />
+
+        {Router(state, actions)}
     </div>
 );
 
-app(state, actions, view, document.getElementById('root'));
+const main = app(state, actions, view, document.body);
+const unsubscribe = location.subscribe(main.location);
