@@ -1,11 +1,13 @@
 import { h, app } from 'hyperapp';
 import { location, Link } from "@hyperapp/router";
+import './style/index.scss';
+
 import statusCodes from './statusCodes.json';
+import Navigation from './components/Navigation';
 import Router from './router';
 
 const informationalCodes = statusCodes.filter(statusObject => statusObject.code.endsWith('xx'));
 const allStatuses = statusCodes.filter(statusObject => !statusObject.code.endsWith('xx')).sort((a, b) => (parseInt(a.code) - parseInt(b.code)));
-
 const state = {
     location: location.state,
     statuses: allStatuses,
@@ -26,34 +28,19 @@ const actions = {
 
     onFilterChanged: (e) => state => {
         const value = e.target.value;
-        console.log(value);
         if (!value) return { statuses: allStatuses, codeFilter: value }
 
-        const filteredStatuses = allStatuses.filter((statusObject) => statusObject.code.startsWith(value));
+        const lowerCaseValue = value.toLowerCase();
+        const filteredStatuses = allStatuses.filter((statusObject) => 
+                statusObject.code.startsWith(lowerCaseValue) ||
+                statusObject.phrase.toLowerCase().includes(lowerCaseValue)
+            );
+        
         return { statuses: filteredStatuses, codeFilter: value };
     }
 };
 
-const Navigation = (state) => (
-    <nav>
-        <ul>
-            <li>
-                <Link to="/">Home</Link>
-            </li>
-            <li>
-                <Link to="/browse">Browse</Link>
-            </li>
-            <li>
-                <Link to="/guess">Guess</Link>
-            </li>
-            <li>
-                <Link to="/about">About</Link>
-            </li>
-        </ul>
-    </nav>
-)
-
-const view = (state, actions) => (
+const appView = (state, actions) => (
     <div>
         <Navigation />
 
@@ -61,5 +48,5 @@ const view = (state, actions) => (
     </div>
 );
 
-const main = app(state, actions, view, document.body);
+const main = app(state, actions, appView, document.body);
 const unsubscribe = location.subscribe(main.location);
